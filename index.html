@@ -194,6 +194,17 @@
       border-radius: 16px;
       padding: 11px 11px 12px;
       align-self: stretch;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(212,163,115,0.95), rgba(212,163,115,0.15));
     }
 
     .card h3 {
@@ -216,6 +227,19 @@
       border: 1px solid var(--gold);
       border-radius: 16px;
       padding: 11px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight::before,
+    .band::before,
+    .comparison-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(212,163,115,0.95), rgba(212,163,115,0.15));
     }
 
     .highlight h3 {
@@ -233,6 +257,74 @@
       line-height: 1.65;
     }
 
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0;
+      color: var(--gold-soft);
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, transparent, rgba(212,163,115,0.55), transparent);
+    }
+
+    .section-divider .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px rgba(212,163,115,0.12);
+      flex: 0 0 auto;
+    }
+
+    .band {
+      position: relative;
+      padding: 12px 14px;
+      border-left: 3px solid var(--gold);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(23,16,11,0.95), rgba(17,17,17,0.92));
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .band h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .band p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid #372a1b;
+      background: rgba(255,255,255,0.02);
+      color: var(--gold-soft);
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     .comparison-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -245,6 +337,8 @@
       border-left: 3px solid var(--gold);
       border-radius: 14px;
       padding: 11px;
+      position: relative;
+      overflow: hidden;
     }
 
     .comparison-card h3 {
@@ -266,6 +360,17 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(180deg, rgba(212,163,115,0.55), rgba(212,163,115,0.08));
     }
 
     .timeline-item {
@@ -273,6 +378,7 @@
       grid-template-columns: 30px 1fr;
       gap: 10px;
       align-items: start;
+      position: relative;
     }
 
     .timeline-marker {
@@ -437,6 +543,14 @@
         <span class="pill">Provocativo</span>
       </div>
 
+      <div class="section-divider"><span class="dot"></span></div>
+
+      <div class="badge-row">
+        <span class="badge">Leitura fluida</span>
+        <span class="badge">Celular primeiro</span>
+        <span class="badge">Direção clara</span>
+      </div>
+
       <div class="footer">Romulo Zorzanelli<br/>Zone Digital | Mentoria 4D</div>
     </section>
 
@@ -466,6 +580,14 @@
         <div class="highlight">
           <h3>Resumo em uma frase</h3>
           <p>Este material mostra como inteligencia artificial e automacao deixam de ser assunto abstrato e comecam a virar estrutura, renda e perspectiva para quem vive o CLT hoje.</p>
+        </div>
+
+        <div class="section-divider"><span class="dot"></span></div>
+
+        <div class="badge-row">
+          <span class="badge">Clareza</span>
+          <span class="badge">Direção</span>
+          <span class="badge">Virada</span>
         </div>
 
         <div class="spacer-lg"></div>
@@ -498,6 +620,8 @@
           <h3>A ideia central</h3>
           <p>Voce nao precisa comecar sozinho, nem precisa aprender tudo no escuro. Quem anda com metodo e referencia reduz erro e acelera resultado.</p>
         </div>
+
+        <div class="section-divider"><span class="dot"></span></div>
 
         <div class="spacer-lg"></div>
         <div class="timeline">
@@ -595,19 +719,22 @@
             <p>A percepcao de que a saida nao precisa ser brusca para ser real. Comeca com clareza, passa por habilidade e pode se transformar em renda fora do CLT.</p>
           </div>
         </div>
+        <div class="section-divider"><span class="dot"></span></div>
+
         <div class="spacer-sm"></div>
-        <div class="highlight">
+        <div class="band">
           <h3>Voce com a vida que deseja ainda este ano</h3>
           <p>A vontade de mudar nao e um exagero. Ela aparece quando voce entende que continuar no automatico tambem e uma decisao. A diferenca e que essa decisao custa a sua paz aos poucos.</p>
         </div>
       </section>
 
-    <section class="page">
-      <p class="eyebrow">CLT</p>
-      <h2 class="section-title">A vida que ainda pode acontecer este ano</h2>
-      <p class="section-sub">O desejo nao e abstrato. Nao e sobre ganhar dinheiro por orgulho. E sobre respirar melhor, dormir com menos peso e enxergar uma saida real para a sua rotina. E sobre nao acordar mais pensando que a sua vida precisa caber para sempre dentro do mesmo limite.</p>
-      <div class="spacer-lg"></div>
-      <div class="grid-2">
+        <section class="page">
+        <p class="eyebrow">CLT</p>
+        <h2 class="section-title">A vida que ainda pode acontecer este ano</h2>
+        <p class="section-sub">O desejo nao e abstrato. Nao e sobre ganhar dinheiro por orgulho. E sobre respirar melhor, dormir com menos peso e enxergar uma saida real para a sua rotina. E sobre nao acordar mais pensando que a sua vida precisa caber para sempre dentro do mesmo limite.</p>
+        <div class="section-divider"><span class="dot"></span></div>
+        <div class="spacer-lg"></div>
+        <div class="grid-2">
         <div class="card">
           <h3>O que voce realmente quer</h3>
           <p>Ter uma saida real que ajude na renda, na rotina e na saude. Poder construir uma habilidade que abra mais do que portas profissionais: abra margem para viver com mais dignidade, menos aperto e mais escolha.</p>
@@ -656,11 +783,12 @@
         </div>
       </section>
 
-    <section class="page">
-      <p class="eyebrow">Como usar este material</p>
-      <h2 class="section-title">Como usar este material do jeito certo</h2>
-      <p class="section-sub">Leia pensando na sua realidade como CLT. O objetivo e identificar onde voce esta hoje e qual e o caminho logico para avancar sem se perder em ruido.</p>
-      <div class="spacer-lg"></div>
+      <section class="page">
+        <p class="eyebrow">Como usar este material</p>
+        <h2 class="section-title">Como usar este material do jeito certo</h2>
+        <p class="section-sub">Leia pensando na sua realidade como CLT. O objetivo e identificar onde voce esta hoje e qual e o caminho logico para avancar sem se perder em ruido.</p>
+        <div class="section-divider"><span class="dot"></span></div>
+        <div class="spacer-lg"></div>
         <div class="grid-3">
           <div class="card">
             <h3>Aplicacao pratica</h3>
@@ -679,6 +807,7 @@
         <div class="spacer-lg"></div>
         <h2 class="section-title" style="margin-top: 4px; font-size: clamp(22px, 2.8vw, 32px);">Onde o mapa vira metodo</h2>
         <p class="section-sub">Este ebook nao entrega a execucao completa. Ele faz algo mais importante no inicio: organiza a sua cabeca e mostra por que existe um metodo validado por tras da Mentoria 4D.</p>
+        <div class="section-divider"><span class="dot"></span></div>
         <div class="spacer-md"></div>
         <div class="grid-2">
           <div class="card">
