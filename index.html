@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ebook 4D</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #111111;
+      --panel-2: #17100b;
+      --border: #2a241b;
+      --gold: #d4a373;
+      --gold-soft: #f1d6b8;
+      --text: #f4f1ec;
+      --muted: #c9c4bc;
+      --soft: #8e8478;
+      --page-w: 210mm;
+      --page-h: 297mm;
+      --radius: 18px;
+      --page-pad-x: 18mm;
+      --page-pad-y: 16mm;
+      --gap: 14px;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top right, rgba(212,163,115,0.18), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(212,163,115,0.12), transparent 18%),
+        #050505;
+      color: var(--text);
+      font-family: Arial, system-ui, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+    }
+
+    .document {
+      width: min(100%, 210mm);
+      padding: 8px 0 24px;
+    }
+
+    .page {
+      width: 100%;
+      min-height: var(--page-h);
+      margin: 0 0 16px;
+      padding: var(--page-pad-y) var(--page-pad-x);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0)),
+        var(--bg);
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    .page::before {
+      width: 96px;
+      height: 96px;
+      right: -28px;
+      top: 28px;
+      background: rgba(212,163,115,0.18);
+    }
+
+    .page::after {
+      width: 72px;
+      height: 72px;
+      left: 14px;
+      bottom: 22px;
+      background: rgba(212,163,115,0.12);
+    }
+
+    .page-compact {
+      min-height: auto;
+    }
+
+    .eyebrow {
+      text-align: center;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold-soft);
+      margin: 0 0 8px;
+    }
+
+    .title {
+      margin: 0;
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.05;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 14px auto 0;
+      max-width: 140mm;
+      text-align: center;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .body {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.68;
+      margin: 0;
+    }
+
+    .body-center {
+      text-align: center;
+      max-width: 150mm;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-title {
+      margin: 0;
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.08;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .section-sub {
+      margin: 10px auto 0;
+      max-width: 155mm;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: start;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.18);
+    }
+
+    .panel-alt {
+      background: var(--panel-2);
+      border: 1px solid var(--gold);
+    }
+
+    .card {
+      background: #111111;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 11px 11px 12px;
+      align-self: stretch;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .highlight {
+      background: var(--panel-2);
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+      padding: 11px;
+    }
+
+    .highlight h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .highlight p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .comparison-card {
+      background: #101010;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 14px;
+      padding: 11px;
+    }
+
+    .comparison-card h3 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .comparison-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.58;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .timeline-marker {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--gold);
+      background: var(--panel-2);
+      color: var(--gold-soft);
+      font-size: 11px;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 4px;
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.58;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pill {
+      min-width: 98px;
+      text-align: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #131313;
+      border: 1px solid #3a2c1b;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--soft);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .author-photo {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #101010;
+    }
+
+    .button-like {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--gold);
+      color: #050505;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .spacer-sm { height: 6px; }
+    .spacer-md { height: 8px; }
+    .spacer-lg { height: 12px; }
+
+    @media (max-width: 980px) {
+      :root {
+        --page-pad-x: 16px;
+        --page-pad-y: 16px;
+      }
+      .document {
+        width: 100%;
+        padding: 0 0 24px;
+      }
+      .page {
+        min-height: auto;
+        margin: 0 0 12px;
+      }
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .title {
+        font-size: 34px;
+      }
+      .section-title {
+        font-size: 28px;
+      }
+      .subtitle, .section-sub, .body {
+        font-size: 14px;
+      }
+    }
+
+    @media print {
+      html, body {
+        background: #050505 !important;
+      }
+      .document {
+        width: 100%;
+        padding: 0;
+      }
+      .page {
+        margin: 0;
+        break-after: page;
+        page-break-after: always;
+      }
+      .page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="document">
+    <section class="page">
+      <p class="eyebrow">Ebook gratuito</p>
+      <h1 class="title">O mapa para transformar a vida no CLT em direcao real com IA, automacao e oportunidade.</h1>
+      <p class="subtitle">Um material para quem sente o peso da rotina, quer sair do automatico e precisa de uma leitura emocional, inspiradora e provocativa sobre o caminho que pode comecar agora.</p>
+
+      <div class="spacer-lg"></div>
+
+      <div class="grid-2">
+        <div class="stack">
+          <p class="body">Este ebook foi escrito para conversar com a realidade de quem chega cansado no fim do dia, olha para a vida que levou e sente que existe mais do que isso.</p>
+          <div class="highlight">
+            <h3>O que voce vai encontrar</h3>
+            <p>Uma historia real, uma virada de pensamento, um retrato profundo do CLT, um framework simples e um fechamento que aponta para a Mentoria 4D sem quebrar o fluxo da leitura.</p>
+          </div>
+          <a class="button-like" href="#conteudo">Feito por Romulo Zorzanelli</a>
+        </div>
+        <div class="panel">
+          <img class="author-photo" src="public/images/design-mode/romulo-perfil.jpg" alt="Romulo Zorzanelli" />
+        </div>
+      </div>
+
+      <div class="pill-row">
+        <span class="pill">Direto</span>
+        <span class="pill">Emocional</span>
+        <span class="pill">Provocativo</span>
+      </div>
+
+      <div class="footer">Romulo Zorzanelli<br/>Zone Digital | Mentoria 4D</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Antes de tudo</p>
+      <h2 class="section-title">O que este material faz</h2>
+      <p class="section-sub">A proposta nao e ensinar ferramenta por ensinar. O ebook existe para colocar ordem no pensamento de quem esta no CLT e mostrar uma sequencia logica: reconhecer o peso da rotina, enxergar a possibilidade e decidir se vai continuar esperando ou comecar a construir uma saida.</p>
+
+      <div class="spacer-lg"></div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Clareza</h3>
+          <p>Voce para de tratar a sua rotina como destino e passa a enxergar o que pode ser construido de outro jeito.</p>
+        </div>
+        <div class="card">
+          <h3>Direcao</h3>
+          <p>Em vez de consumir conteudo solto, voce passa a entender uma logica de caminho.</p>
+        </div>
+        <div class="card">
+          <h3>Virada</h3>
+          <p>O ultimo passo do ebook aponta naturalmente para a Mentoria 4D.</p>
+        </div>
+      </div>
+
+      <div class="spacer-lg"></div>
+        <div class="highlight">
+          <h3>Resumo em uma frase</h3>
+          <p>Este material mostra como inteligencia artificial e automacao deixam de ser assunto abstrato e comecam a virar estrutura, renda e perspectiva para quem vive o CLT hoje.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h3>Dor de quem vive no CLT</h3>
+            <p>O dia termina, mas a energia nao volta. A rotina cobra, o salario nao acompanha e a sensacao e de que tudo depende de hora, horario e presenca obrigatoria.</p>
+          </div>
+          <div class="comparison-card">
+            <h3>Paralelo com o proprio negocio online</h3>
+            <p>Quem constroi algo proprio ainda trabalha muito, mas cada movimento pode virar ativo, audiencia, relacionamento e receita repetivel.</p>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <p class="body body-center">A diferenca central nao e romantica. E estrutural: no CLT voce entrega tempo; no negocio online voce pode transformar tempo em sistema, sistema em oferta e oferta em crescimento.</p>
+      </section>
+
+    <section class="page">
+      <p class="eyebrow">Romulo Zorzanelli</p>
+      <h2 class="section-title">Comecou dentro de uma empresa. Mudou a vida inteira.</h2>
+      <div class="spacer-md"></div>
+      <p class="body">Eu comecei dentro de uma empresa. Nao foi em um laboratorio, nem num cenario ideal. Foi resolvendo uma necessidade real, usando automacao e inteligencia artificial para fazer o negocio funcionar melhor. A partir dali, a trajetoria ficou clara: primeiro como gestor de agentes e sistemas, depois como alguem que passou a entregar isso para empresas. O inicio nao pareceu uma grande revolucao. Pareceu trabalho. Mas foi exatamente ali que tudo mudou.</p>
+      <div class="spacer-sm"></div>
+      <p class="body">O primeiro contrato veio por R$ 2.800. Esse numero importa nao pela cifra, mas pelo que ele representa: eu estava dentro de uma empresa, alguem viu valor no que eu fazia e decidiu investir em mim. A partir desse ponto, eu percebi que a mesma logica podia gerar oportunidade fora da empresa tambem.</p>
+      <div class="spacer-sm"></div>
+      <p class="body">Hoje eu trabalho de casa, com minha esposa e meus dois filhos pequenos por perto. Isso nao significa apenas conforto. Significa presenca, rotina mais humana e a chance de construir algo com mais impacto na minha familia. E quando eu olho para tras, o que eu vejo nao e sorte. E decisao tomada cedo: aprender a dominar o que o mercado ainda estava comecando a entender.</p>
+
+      <div class="spacer-lg"></div>
+        <div class="highlight">
+          <h3>A ideia central</h3>
+          <p>Voce nao precisa comecar sozinho, nem precisa aprender tudo no escuro. Quem anda com metodo e referencia reduz erro e acelera resultado.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-marker">01</div>
+            <div>
+              <h3>Entrada pela necessidade real</h3>
+              <p>O ponto de partida nao foi teoria. Foi enxergar uma necessidade de empresa e usar automacao e inteligencia artificial para resolver um problema concreto.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">02</div>
+            <div>
+              <h3>Primeiro resultado comercial</h3>
+              <p>O contrato de R$ 2.800 marcou a virada de valor percebido: alguem viu resultado, apostou na entrega e abriu a porta para a proxima etapa.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">03</div>
+            <div>
+              <h3>Trabalho de casa</h3>
+              <p>Depois disso, a rotina deixou de depender de um lugar fixo e passou a sustentar uma vida com mais proximidade da familia e mais controle do proprio tempo.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker">04</div>
+            <div>
+              <h3>Posicionamento atual</h3>
+              <p>A trajetoria consolidou um caminho: entender IA e automacao como ferramenta de valor real para empresas, e nao como curiosidade passageira.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="page">
+      <p class="eyebrow">Verdades que pouca gente fala</p>
+      <h2 class="section-title">O que muda quando a visao fica honesta</h2>
+      <div class="spacer-lg"></div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Andar sozinho custa caro</h3>
+            <p>Tentativa e erro parecem gratuitos, mas custam tempo, energia e confianca.</p>
+        </div>
+        <div class="card">
+          <h3>IA nao substitui posicionamento</h3>
+          <p>Ferramenta nao vende sozinha. Oferta, processo e clareza e que viram dinheiro.</p>
+        </div>
+          <div class="card">
+            <h3>Quem domina IA sai na frente</h3>
+            <p>A disputa real ja nao e saber se a IA existe, mas quem sabe usa-la de forma comercial.</p>
+          </div>
+        </div>
+        <div class="spacer-lg"></div>
+        <p class="body body-center">O ponto aqui nao e romantizar tecnologia. E entender que a vantagem real nasce quando voce para de procurar truques e passa a construir sistema. Isso muda a forma como voce enxerga mercado, tempo e oportunidade.</p>
+        <div class="spacer-md"></div>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h3>Quando a visao fica rasa</h3>
+            <p>A pessoa olha para IA como ferramenta da moda, coleciona promessas e continua exatamente no mesmo lugar, sem estrutura e sem direcao.</p>
+          </div>
+          <div class="comparison-card">
+            <h3>Quando a visao fica honesta</h3>
+            <p>A pessoa entende o processo, usa a IA com objetivo e passa a tomar decisoes com mais clareza sobre o que construir e para quem construir.</p>
+          </div>
+        </div>
+      </section>
+
+    <section class="page" id="conteudo">
+      <p class="eyebrow">CLT</p>
+      <h2 class="section-title">Voce ainda esta no CLT</h2>
+      <p class="section-sub">Essa parte foi escrita para a pessoa que sente, no fundo, que a vida nao acabou no cargo que ocupa. A pergunta nao e se voce quer trabalhar. E se voce aceita continuar trocando tempo por um salario que nao acompanha a sua necessidade de viver melhor.</p>
+      <div class="spacer-lg"></div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Essa ideia realmente serve para mim?</h3>
+            <p>Voce ja percebeu que a IA ajuda a criar conteudo, mas trava na automacao, edicao e divulgacao. No fundo, a pergunta nao e sobre ferramenta. E sobre se isso pode mesmo se encaixar na sua vida real, sem exigir que voce vire programador, sem pedir que voce largue tudo hoje e sem fazer voce se sentir atrasado antes mesmo de comecar.</p>
+          </div>
+        <div class="card">
+          <h3>O que te trava na hora de sair do lugar</h3>
+          <p>O maior bloqueio nao costuma ser falta de inteligencia. E o cansaco. E chegar do trabalho, olhar para a tela e sentir que qualquer passo novo parece grande demais. E a edicao que demora, a divulgacao que parece frustrante e a sensacao de que voce ja esta usando energia demais para manter a vida do jeito que esta.</p>
+        </div>
+          <div class="card">
+            <h3>O peso de continuar do mesmo jeito</h3>
+            <p>O problema de fundo e o salario baixo e a sensacao de estar parado enquanto o mundo muda. Voce faz a sua parte, cumpre o combinado, entrega o que precisa ser entregue, mas no fim do mes a conta nao fecha do jeito que sua vida exige. Isso desgasta a mente, o corpo e a esperanca.</p>
+          </div>
+        </div>
+        <div class="spacer-lg"></div>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h3>O que a maioria sente</h3>
+            <p>Um cansaço constante, a ideia de que nao da tempo de aprender nada novo e a sensacao de que toda saida parece distante demais para a rotina que ja existe hoje.</p>
+          </div>
+          <div class="comparison-card">
+            <h3>O que este material quer provocar</h3>
+            <p>A percepcao de que a saida nao precisa ser brusca para ser real. Comeca com clareza, passa por habilidade e pode se transformar em renda fora do CLT.</p>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <div class="highlight">
+          <h3>Voce com a vida que deseja ainda este ano</h3>
+          <p>A vontade de mudar nao e um exagero. Ela aparece quando voce entende que continuar no automatico tambem e uma decisao. A diferenca e que essa decisao custa a sua paz aos poucos.</p>
+        </div>
+      </section>
+
+    <section class="page">
+      <p class="eyebrow">CLT</p>
+      <h2 class="section-title">A vida que ainda pode acontecer este ano</h2>
+      <p class="section-sub">O desejo nao e abstrato. Nao e sobre ganhar dinheiro por orgulho. E sobre respirar melhor, dormir com menos peso e enxergar uma saida real para a sua rotina. E sobre nao acordar mais pensando que a sua vida precisa caber para sempre dentro do mesmo limite.</p>
+      <div class="spacer-lg"></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>O que voce realmente quer</h3>
+          <p>Ter uma saida real que ajude na renda, na rotina e na saude. Poder construir uma habilidade que abra mais do que portas profissionais: abra margem para viver com mais dignidade, menos aperto e mais escolha.</p>
+        </div>
+        <div class="card">
+          <h3>O que isso muda por dentro</h3>
+          <p>Quando a pessoa do CLT percebe que existe um caminho pratico, ela para de se sentir presa e comeca a agir com mais lucidez. O peso nao some em um dia, mas a perspectiva muda o jeito de andar.</p>
+        </div>
+      </div>
+      <div class="spacer-sm"></div>
+        <div class="highlight">
+          <h3>A virada</h3>
+          <p>Nao e sobre largar tudo amanha. E sobre comecar a construir uma habilidade que possa virar renda, cliente e liberdade aos poucos.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+        <p class="body body-center">Quando a virada deixa de ser abstrata, o desejo ganha forma pratica. E nessa hora que o plano precisa sair da ideia e virar sistema.</p>
+        <h2 class="section-title" style="margin-top: 6px; font-size: clamp(22px, 2.8vw, 32px);">A logica que transforma atencao em venda</h2>
+        <p class="section-sub">O valor do ebook aumenta quando ele mostra uma sequencia de raciocinio, e nao uma lista de dicas soltas. O framework abaixo resume o processo que faz a automacao virar oportunidade comercial.</p>
+        <div class="spacer-md"></div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>1. Captacao</h3>
+            <p>A pessoa certa precisa entrar no fluxo. Sem atencao, nao existe conversa.</p>
+          </div>
+          <div class="card">
+            <h3>2. Qualificacao</h3>
+            <p>Nem todo lead e cliente. A estrutura filtra, organiza e prepara a proxima etapa.</p>
+          </div>
+          <div class="card">
+            <h3>3. Conversao</h3>
+            <p>A conversa e conduzida para o proximo passo natural: agendamento, proposta ou compra.</p>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <div class="panel" style="max-width: 100%; margin: 0;">
+          <div class="card" style="margin: 0; background: transparent; border-color: var(--gold);">
+            <h3>4. Escala</h3>
+            <p>Quando o processo funciona, voce para de depender de improviso e passa a repetir resultado.</p>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <div class="highlight" style="max-width: 100%; margin: 0;">
+          <h3>Por que isso importa</h3>
+          <p>Esse framework da valor real porque ensina a pessoa a pensar como operador de sistema, nao como consumidor de ferramenta.</p>
+        </div>
+      </section>
+
+    <section class="page">
+      <p class="eyebrow">Como usar este material</p>
+      <h2 class="section-title">Como usar este material do jeito certo</h2>
+      <p class="section-sub">Leia pensando na sua realidade como CLT. O objetivo e identificar onde voce esta hoje e qual e o caminho logico para avancar sem se perder em ruido.</p>
+      <div class="spacer-lg"></div>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Aplicacao pratica</h3>
+            <p>Veja onde a automacao pode ajudar a tirar voce do improviso e abrir renda ou oportunidade fora da carteira assinada.</p>
+        </div>
+        <div class="card">
+          <h3>Aplicacao pratica</h3>
+          <p>Pense no que hoje consome sua energia: atendimento, divulgacao, edicao ou a sensacao de que nada anda.</p>
+        </div>
+          <div class="card">
+            <h3>Aplicacao pratica</h3>
+            <p>Entenda que comecar certo vale mais do que tentar sozinho por muito tempo e se cansar no meio do caminho.</p>
+          </div>
+        </div>
+
+        <div class="spacer-lg"></div>
+        <h2 class="section-title" style="margin-top: 4px; font-size: clamp(22px, 2.8vw, 32px);">Onde o mapa vira metodo</h2>
+        <p class="section-sub">Este ebook nao entrega a execucao completa. Ele faz algo mais importante no inicio: organiza a sua cabeca e mostra por que existe um metodo validado por tras da Mentoria 4D.</p>
+        <div class="spacer-md"></div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>O que voce ganha</h3>
+            <p>Estrutura, direcao e um caminho claro para sair do improviso.</p>
+          </div>
+          <div class="card">
+            <h3>O que voce evita</h3>
+            <p>Tempo perdido com ferramenta solta, tentativa sem venda e conteudo sem transformacao.</p>
+          </div>
+        </div>
+        <div class="spacer-sm"></div>
+        <div class="highlight" style="max-width: 100%; margin: 0;">
+          <h3>Ponte direta</h3>
+          <p>Se o ebook te fez perceber que faz mais sentido avancar com metodo, a proxima etapa esta na pagina de vendas da Mentoria 4D.</p>
+        </div>
+        <div class="spacer-sm"></div>
+        <p style="text-align:center;"><a class="button-like" href="https://mentoria-4d.vercel.app/">mentoria-4d.vercel.app</a></p>
+      </section>
+
+    <section class="page page-compact">
+      <p class="eyebrow">Fechamento</p>
+      <h2 class="section-title">Voce ja tem o mapa. Agora falta decidir o caminho.</h2>
+      <p class="section-sub">O mundo esta cheio de gente falando de IA. Pouca gente fala da parte pratica: organizar pensamento, transformar habilidade em oferta e construir uma estrutura que tenha valor no mercado. O ebook existe para te lembrar que voce nao precisa aceitar o teto que o CLT impõe como destino final.</p>
+      <div class="spacer-lg"></div>
+      <div class="highlight" style="max-width: 100%; margin: 0;">
+        <h3>Mensagem final</h3>
+        <p>Quem aprende a usar IA e automacao com direcao nao so acompanha o mercado. Passa a criar vantagem dentro dele.</p>
+      </div>
+      <div class="spacer-lg"></div>
+      <p style="text-align:center;"><a class="button-like" href="https://mentoria-4d.vercel.app/">Acessar a Mentoria 4D</a></p>
+      <div class="footer">
+        https://mentoria-4d.vercel.app/<br/>
+        Romulo Zorzanelli | Zone Digital
+      </div>
+    </section>
+  </main>
+</body>
+</html>
